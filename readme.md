@@ -9,6 +9,31 @@ new backup binary `cbbackupmgr`, which is missing in pre 4.5
 versions. Backup script in version 4.0.0 uses previous backup binary
 `cbbackup`.
 
+## Docker image
+
+Image is based on official
+[Docker image](https://hub.docker.com/_/couchbase/) from Couchbase, with
+addition of AWS CLI tools package and backup script.
+
+
+### Couchbase server
+
+Since this is a full Couchbase image, it can be also used as a Couchbase
+server image, the same way as it is described in
+https://hub.docker.com/_/couchbase/ You will need only to provide
+`--entrypoint` option for it.
+
+For example:
+
+```
+docker run -d -v \
+--entrypoint /entrypoint.sh \ # <----- Additional option
+~/couchbase:/opt/couchbase/var \
+-p 8091:8091 \
+--name my-couchbase-server couchbase
+
+```
+
 # Running scripts
 
 ## AWS configuration
