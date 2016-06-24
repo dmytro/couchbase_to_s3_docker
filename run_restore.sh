@@ -35,11 +35,10 @@ HOST_BACKUP_PATH=/home/backup
                 -e SERVER_IP="couchbase" \
                 -v ~/.aws:/root/.aws \
                 -v ${HOST_BACKUP_PATH}:/data \
-                -e RESTORE_BUCKETS \
-                -e AWS_PROFILE \
-                -e AWS_REGION \
-                -e S3_BUCKET \
-                -e SERVER_PASSWORD \
-                -e BACKUP_PATH \
-                -e BACKUP_REPO \
+                -e RESTORE_BUCKETS=${RESTORE_BUCKETS} \
+                -e AWS_PROFILE=${AWS_PROFILE} \
+                -e AWS_REGION=${AWS_REGION} \
+                -e S3_BUCKET=${S3_BUCKET} \
+                -e SERVER_USER=${SERVER_USER} \
+                -e SERVER_PASSWORD=${SERVER_PASSWORD} \
                 ${IMAGE} restore 2>&1 | tee /tmp/$(basename $0).$$.$(date +%y%m%d).log
