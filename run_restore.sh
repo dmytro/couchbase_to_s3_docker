@@ -10,15 +10,17 @@ S3_BUCKET=example-backup
 SERVER_USER="Administrator"
 SERVER_PASSWORD="secret"
 
-BACKUP_PATH=/data
-# BACKUP_REPO=example-repo # Only in 4.5
+RESTORE_BUCKETS="default beer-sample"
 
 #
 # Container name of the running Couchbase server
 #
 COUCHBASE_SERVER_CONTAINER=couchbase
 #
-# This is a directory on the host, where backup is persisted. Must exist.
+# This is a directory on the host, where backup is downloaded from
+# S3. Must exist. Make sure that this directory is different from
+# HOST_BACKUP_PATH in run_backup script, or current backuo will be
+# overwritten by the download.
 #
 HOST_BACKUP_PATH=/home/backup
 
@@ -26,19 +28,18 @@ HOST_BACKUP_PATH=/home/backup
 [[ -d ${HOST_BACKUP_PATH} ]] || { echo "Directory ${HOST_BACKUP_PATH} does not exist."; exit 1; }
 
 # Uncomment if SELinux enabled
-# chcon -Rt svirt_sandbox_file_t ${HOST_BACKUP_PATH}
-
-# /usr/bin/docker pull ${IMAGE}
+#chcon -Rt svirt_sandbox_file_t ${HOST_BACKUP_PATH}
 
 /usr/bin/docker run \
                 --link ${COUCHBASE_SERVER_CONTAINER}:couchbase \
                 -e SERVER_IP="couchbase" \
                 -v ~/.aws:/root/.aws \
-                -v ${HOST_BACKUP_PATH}:${BACKUP_PATH} \
+                -v ${HOST_BACKUP_PATH}:/data \
+                -e RESTORE_BUCKETS \
                 -e AWS_PROFILE \
                 -e AWS_REGION \
                 -e S3_BUCKET \
                 -e SERVER_PASSWORD \
                 -e BACKUP_PATH \
                 -e BACKUP_REPO \
-                ${IMAGE} backup 2>&1 | tee /tmp/$(basename $0).$$.$(date +%y%m%d).log
+                ${IMAGE} restore 2>&1 | tee /tmp/$(basename $0).$$.$(date +%y%m%d).log

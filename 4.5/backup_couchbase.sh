@@ -1,4 +1,7 @@
 #!/bin/bash
+#
+# Backup script for  Couchbase 4.5 and up
+#
 
 PATH=/bin:/sbin:/usr/bin:/usr/sbin:/opt/couchbase/bin
 
@@ -8,7 +11,7 @@ set -e
 : ${AWS_REGION:=us-east-1}
 : ${S3_BUCKET:=example-backup}
 
-: ${SERVER_URI:="couchbase://127.0.0.1"}
+: ${SERVER_IP:="127.0.0.1"}
 : ${SERVER_USER:="Administrator"}
 : ${SERVER_PASSWORD:="secret"}
 
@@ -19,6 +22,7 @@ set -e
 # ========================================================================================
 # END of configuration
 # ========================================================================================
+SERVER_URI="couchbase://${SERVER_IP}"
 
 sync_s3_up () {
   AWS_DEFAULT_PROFILE=${AWS_PROFILE} \

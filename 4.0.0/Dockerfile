@@ -7,6 +7,8 @@ RUN \
   && apt-get autoremove && apt-get clean \
   && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
+ENV PATH "/bin:/sbin:/usr/bin:/usr/sbin:/opt/couchbase/bin:/usr/local/bin/:/usr/local/sbin/"
+
 ENTRYPOINT ["/backup_couchbase.sh"]
 CMD ["backup"]
 
